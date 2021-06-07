@@ -1,0 +1,16 @@
+server:
+  port: 8081
+spring:
+  datasource:
+    url: jdbc:mysql://rm-2zel644fmm9p456vd.mysql.rds.aliyuncs.com:3306/testgroup?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    username: youfenqihuiyuan
+    password: Youfenqi_123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis:
+  mapper-locations: classpath*:/mapper/**Mapper.xml
+  #mapper.xml文件中resultMap的type、parameterType、resultType会引用一些实体类，我们需要写上全限定类名，如果不写全限定类名，
+  #只写一个实体类的名称的话，那就需要在application.yml文件中设置mybatis:type-aliases-package参数；
+  #在配置好mybatis后，我们在mapper.xml映射文件中不需要写出实体类的完整路径，只需要写出类名即可
+  # https://blog.csdn.net/qq_44844751/article/details/115281408
+  type-aliases-package: com.cv.entity

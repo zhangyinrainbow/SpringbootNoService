@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cv.mapper.UserMapper">
+    <resultMap id="user" type="User">
+        <!--property： 映射数据库列的字段或属性 -->
+        <!--子元素id代表resultMap的主键，而result代表其属性 -->
+        <!--column:数据库的列名或者列标签别名-->
+        <id column="id" property="id" javaType="Integer"></id>
+        <result column="username" property="username" javaType="String"></result>
+        <result column="avatar" property="avatar" javaType="String"></result>
+        <result column="email" property="email" javaType="String"></result>
+        <result column="password" property="password" javaType="String"></result>
+        <result column="created" property="created" javaType="String"></result>
+        <result column="last_login" property="last_login" javaType="String"></result>
+    </resultMap>
+    <!--id的值必须和数据处理层的接口名一致-->
+    <!--查询全部用户-->
+    <select id="queryUser" resultType="User">
+        select  * from m_user
+    </select>
+    <!--根据id查询用户-->
+    <select id="queryUserById" resultType="User" resultMap="user" parameterType="Integer">
+        select * from m_user
+        <!--prefix:在trim标签内sql语句加上前缀。
+            suffix:在trim标签内sql语句加上后缀。
+            prefixOverrides:指定去除多余的前缀内容
+            suffixOverrides:指定去除多余的后缀内容
+         -->
+            <trim suffixOverrides="and" prefixOverrides="and">
+                <where>
+            <!--其实where会自动过滤掉第一个if后的and，但是不会自动过滤第二个-->
+                   <!-- <if test="id!=null">-->
+            <!--
+            #将传入的数据都当成一个字符串，会对自动传入的数据加一个双引号。如：order by #user_id#，如果传入的值是111,那么解析成sql时的值为order by "111",
+            如果传入的值是id，则解析成的sql为order by "id".
+            $将传入的数据直接显示生成在sql中。如：order by $user_id$，如果传入的值是111,那么解析成sql时的值为order by user_id,
+            如果传入的值是id，则解析成的sql为order by id.
+            #方式能够很大程度防止sql注入
+            $方式一般用于传入数据库对象，例如传入表名.
+            一般能用#的就别用$.
+            MyBatis排序时使用order by 动态参数时需要注意，用$而不是#
+            -->
+                        and id = #{id}
+                   <!-- </if> -->
+                </where>
+            </trim>
+    </select>
+    <!--根据用户名查询用户-->
+    <select id="queryuserbyname" resultMap="user" resultType="User" parameterType="String">
+        select * from m_user
+        <trim suffixOverrides="and" prefixOverrides="and">
+            <where>
+                <if test="username!=null"></if>
+                    and username = #{username}
+            </where>
+        </trim>
+    </select>
+    <!--根据id删除用户-->
+    <delete id="deleteUserById"  parameterType="Integer">
+        delete from m_user where id = #{id}
+    </delete>
+    <!--新增用户-->
+    <insert id="addUser" parameterType="User">
+        insert into m_user value (${id},#{username},#{avatar},#{email},#{password},#{status},#{created},#{last_login})
+    </insert>
+    <!--更改用户-->
+    <update id="updateUser" parameterType="User">
+        update m_user set username=#{username},
+                          avatar=#{avatar},
+                          email=#{email},
+                          password=#{password},
+                          created=#{created}
+                      where id = #{id}
+    </update>
+</mapper>
